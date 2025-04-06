@@ -11,6 +11,7 @@ import Profile from './src/Profile';
 import Camera from './src/Camera';
 import SignUp from './src/SignUp';
 import Login from './src/Login';
+import CustomHeader from './src/components/Header';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -25,6 +26,7 @@ function MyTabs() {
           tabBarIcon: ({ color, size }) => (
             <Icon name="home" size={size} color={color} />
           ),
+          header: () => <CustomHeader title="Home" />,
         }}
       />
       <Tab.Screen 
@@ -34,6 +36,7 @@ function MyTabs() {
           tabBarIcon: ({ color, size }) => (
             <Icon name="camera" size={size} color={color} />
           ),
+          header: () => <CustomHeader title="Camera" />,
         }}
       />
       <Tab.Screen 
@@ -43,6 +46,7 @@ function MyTabs() {
           tabBarIcon: ({ color, size }) => (
             <Icon name="user" size={size} color={color} />
           ),
+          header: () => <CustomHeader title="Profile" />,
         }}
       />
     </Tab.Navigator>
