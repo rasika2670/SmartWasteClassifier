@@ -1,13 +1,19 @@
-<<<<<<< HEAD
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from './src/Home';
-import Profile from "./src/Profile";
-import Camera from './src/Camera';
+import { createStackNavigator } from '@react-navigation/stack';
+import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import Home from './src/Home';
+import Profile from './src/Profile';
+import Camera from './src/Camera';
+import SignUp from './src/SignUp';
+import Login from './src/Login';
+
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 function MyTabs() {
   return (
@@ -42,23 +48,15 @@ function MyTabs() {
     </Tab.Navigator>
   );
 }
-=======
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Home from './src/Home';
-import Camera from './src/Camera';
-import Profile from './src/Profile';
-import ResultScreen from './src/Result';
 
-const Stack = createStackNavigator();
->>>>>>> 28289db11ddd316016e6105d3d0d1e92d6c8da43
-
-const App = () => {
+function App() {
   return (
     <NavigationContainer>
-<<<<<<< HEAD
-      <MyTabs />
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Main" component={MyTabs} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
@@ -66,16 +64,3 @@ const App = () => {
 export default App;
 
 const styles = StyleSheet.create({});
-=======
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Camera" component={Camera} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Result" component={ResultScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
-
-export default App;
->>>>>>> 28289db11ddd316016e6105d3d0d1e92d6c8da43

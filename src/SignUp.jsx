@@ -9,17 +9,24 @@ GoogleSignin.configure({
   webClientId: '991254921130-c2krr7okf7ufqjpt35gepqasg5c18le9.apps.googleusercontent.com', // Replace with your Firebase project's webClientId
 });
 
-const Login = () => {
+const SignUp = () => {
   const navigation = useNavigation();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Passwords do not match');
+      return;
+    }
     try {
-      await auth().signInWithEmailAndPassword(email, password);
+      await auth().createUserWithEmailAndPassword(email, password);
+      auth().currentUser.updateProfile({ displayName: name });
       navigation.replace('Main');
     } catch (error) {
-      Alert.alert('Login Failed', error.message);
+      Alert.alert('Sign Up Failed', error.message);
     }
   };
 
@@ -37,13 +44,15 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Log in</Text>
-      <Text style={styles.linkText} onPress={() => navigation.navigate('SignUp')}>or <Text style={styles.link}>Create an account</Text></Text>
+      <Text style={styles.header}>Sign up</Text>
+      <Text style={styles.linkText} onPress={() => navigation.navigate('Login')}>or <Text style={styles.link}>Already have an account</Text></Text>
+      <TextInput placeholder="Name" style={styles.input} onChangeText={setName} />
       <TextInput placeholder="Email" style={styles.input} onChangeText={setEmail} keyboardType="email-address" />
       <TextInput placeholder="Password" style={styles.input} secureTextEntry onChangeText={setPassword} />
+      <TextInput placeholder="Confirm Password" style={styles.input} secureTextEntry onChangeText={setConfirmPassword} />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Log in</Text>
+      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+        <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
 
       <Text style={styles.forgot}>Forgot Password ?</Text>
@@ -51,13 +60,13 @@ const Login = () => {
 
       <TouchableOpacity style={styles.googleButton} onPress={signInWithGoogle}>
         <Icon name="google" size={20} color="#EA4335" style={styles.googleIcon} />
-        <Text style={styles.googleText}>Log in with Google</Text>
+        <Text style={styles.googleText}>Sign up with Google</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default Login;
+export default SignUp;
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: 'center' },
