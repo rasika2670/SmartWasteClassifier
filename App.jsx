@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -41,10 +42,22 @@ function MyTabs() {
     </Tab.Navigator>
   );
 }
+=======
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Home from './src/Home';
+import Camera from './src/Camera';
+import Profile from './src/Profile';
+import ResultScreen from './src/Result';
+
+const Stack = createStackNavigator();
+>>>>>>> 28289db11ddd316016e6105d3d0d1e92d6c8da43
 
 const App = () => {
   return (
     <NavigationContainer>
+<<<<<<< HEAD
       <MyTabs />
     </NavigationContainer>
   );
@@ -53,3 +66,16 @@ const App = () => {
 export default App;
 
 const styles = StyleSheet.create({});
+=======
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Camera" component={Camera} />
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="Result" component={ResultScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default App;
+>>>>>>> 28289db11ddd316016e6105d3d0d1e92d6c8da43

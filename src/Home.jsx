@@ -73,4 +73,8 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         width: '80%'
     }
+<<<<<<< HEAD
 })
+=======
+})
+>>>>>>> 28289db11ddd316016e6105d3d0d1e92d6c8da43
