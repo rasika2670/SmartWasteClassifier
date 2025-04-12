@@ -1,63 +1,108 @@
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, Button, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import axios from 'axios';
 
-const CameraScreen = () => {
-  const [image, setImage] = useState(null);
+export default function Camera() {
+  const [imageUri, setImageUri] = useState(null);
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Open Camera
-  const openCamera = () => {
-    launchCamera({ mediaType: 'photo', quality: 1 }, (response) => {
-      if (!response.didCancel && !response.error) {
-        setImage(response.assets[0].uri);
+  const handleImageSelect = () => {
+    launchImageLibrary({ mediaType: 'photo' }, response => {
+      if (!response.didCancel && !response.errorCode && response.assets) {
+        const uri = response.assets[0].uri;
+        setImageUri(uri);
+        classifyWaste(uri);
       }
     });
   };
 
-  // Open Gallery
-  const openGallery = () => {
-    launchImageLibrary({ mediaType: 'photo', quality: 1 }, (response) => {
-      if (!response.didCancel && !response.error) {
-        setImage(response.assets[0].uri);
+  const handleCameraClick = () => {
+    launchCamera({ mediaType: 'photo' }, response => {
+      if (!response.didCancel && !response.errorCode && response.assets) {
+        const uri = response.assets[0].uri;
+        setImageUri(uri);
+        classifyWaste(uri);
       }
     });
+  };
+
+  const classifyWaste = async (uri) => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', {
+        uri,
+        name: 'waste.jpg',
+        type: 'image/jpeg',
+      });
+
+      const response = await axios.post('http://10.0.2.2:5000/predict', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      setResult(response.data);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      setResult({ error: 'Failed to classify image.' });
+    }
+    setLoading(false);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Select an Image</Text>
-      <View style={styles.buttonContainer}>
-        <Button title="Open Camera" onPress={openCamera} />
-        <Button title="Upload from Gallery" onPress={openGallery} />
-      </View>
-      {image && <Image source={{ uri: image }} style={styles.image} />}
+      <Text style={styles.title}>Waste Classifier</Text>
+
+      <Button title="Pick Image from Gallery" onPress={handleImageSelect} />
+      <Button title="Take Photo" onPress={handleCameraClick} />
+
+      {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+
+      {loading && <ActivityIndicator size="large" color="#2A9D8F" />}
+
+      {result && (
+        <View style={styles.resultBox}>
+          <Text style={styles.resultText}>Label: {result.label}</Text>
+          <Text style={styles.resultText}>Category: {result.category}</Text>
+          <Text style={styles.resultText}>Disposal Method: {result.disposal_method}</Text>
+        </View>
+      )}
     </View>
   );
-};
-
-export default CameraScreen;
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    justifyContent: 'center',
+    padding: 20,
     alignItems: 'center',
+    gap: 15,
+    flex: 1,
+    backgroundColor: '#fff',
   },
-  header: {
-    fontSize: 20,
+  title: {
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 20,
+    color: '#2A9D8F',
   },
   image: {
-    width: 200,
-    height: 200,
-    borderRadius: 10,
+    width: 250,
+    height: 250,
     marginTop: 20,
+    borderRadius: 12,
+    resizeMode: 'cover',
+  },
+  resultBox: {
+    marginTop: 20,
+    backgroundColor: '#e3f9f5',
+    padding: 15,
+    borderRadius: 10,
+    width: '100%',
+    alignItems: 'center',
+  },
+  resultText: {
+    fontSize: 16,
+    color: '#264653',
+    marginVertical: 4,
   },
 });

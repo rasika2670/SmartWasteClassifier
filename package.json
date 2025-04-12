@@ -19,6 +19,7 @@
     "@react-navigation/native-stack": "^7.3.8",
     "@react-navigation/stack": "^7.2.8",
     "axios": "^1.8.4",
+    "image-picker": "^0.3.1",
     "react": "19.0.0",
     "react-native": "0.78.1",
     "react-native-dotenv": "^3.4.11",

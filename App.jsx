@@ -18,13 +18,35 @@ const Stack = createStackNavigator();
 
 function MyTabs() {
   return (
-    <Tab.Navigator initialRouteName="Home">
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: '#2A9D8F',
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
+          height: 70,
+          position: 'absolute',
+          overflow: 'hidden',
+        },
+        tabBarActiveTintColor: '#fff',
+        tabBarInactiveTintColor: '#d1f0ec',
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '600',
+          marginBottom: 8,
+        },
+        tabBarIconStyle: {
+          marginTop: 10,
+        },
+      }}
+    >
       <Tab.Screen 
         name="Home" 
         component={Home} 
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Icon name="home" size={size} color={color} />
+            <Icon name="home" size={22} color={color} />
           ),
           header: () => <CustomHeader title="Home" />,
         }}
@@ -34,7 +56,7 @@ function MyTabs() {
         component={Camera} 
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Icon name="camera" size={size} color={color} />
+            <Icon name="camera" size={22} color={color} />
           ),
           header: () => <CustomHeader title="Camera" />,
         }}
@@ -44,7 +66,7 @@ function MyTabs() {
         component={Profile} 
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Icon name="user" size={size} color={color} />
+            <Icon name="user" size={22} color={color} />
           ),
           header: () => <CustomHeader title="Profile" />,
         }}
@@ -52,6 +74,7 @@ function MyTabs() {
     </Tab.Navigator>
   );
 }
+
 
 function App() {
   return (

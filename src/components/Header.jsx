@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import auth from '@react-native-firebase/auth'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const CustomHeader = ({ title }) => {
   const [username, setUsername] = useState('')
@@ -27,18 +28,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    backgroundColor: '#fff',
+    paddingHorizontal: 24,
+    paddingTop: 34,
+    paddingBottom: 14,
     elevation: 3,
+    backgroundColor: '#2A9D8F',
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#1d3557',
+    color: '#fff'
   },
   username: {
     fontSize: 16,
-    color: '#457b9d',
+    color: '#fff'
   },
 })
