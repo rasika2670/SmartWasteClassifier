@@ -32,16 +32,16 @@ export default function Camera() {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append('file', {
+      formData.append('image', {
         uri,
         name: 'waste.jpg',
         type: 'image/jpeg',
       });
-
-      const response = await axios.post('http://10.0.2.2:5000/predict', formData, {
+  
+      const response = await axios.post('http://10.0.2.2:5000/classify', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
+  
       setResult(response.data);
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -63,7 +63,7 @@ export default function Camera() {
 
       {result && (
         <View style={styles.resultBox}>
-          <Text style={styles.resultText}>Label: {result.label}</Text>
+          <Text style={styles.resultText}>Label: {result.predicted_label}</Text>
           <Text style={styles.resultText}>Category: {result.category}</Text>
           <Text style={styles.resultText}>Disposal Method: {result.disposal_method}</Text>
         </View>

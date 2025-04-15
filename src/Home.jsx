@@ -18,7 +18,7 @@ const Home = () => {
                         <View style={styles.box}></View>
                         <View style={{ gap: 20 }}>
                             <Text style={styles.text}>Waste Type</Text>
-                            <Text style={styles.confidenceText}>Confidence Score: 80%</Text>
+                            <Text style={styles.confidenceText}>Disposal method</Text>
                         </View>
                     </View>
                 ))}
@@ -71,6 +71,6 @@ const styles = StyleSheet.create({
     confidenceText: {
         fontSize: 20,
         flexWrap: 'wrap',
-        width: '80%'
+        width: '100%'
     }
 })

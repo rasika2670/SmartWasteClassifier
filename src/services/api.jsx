@@ -6,13 +6,13 @@ export const classifyWaste = async (uri) => {
       type: 'image/jpeg',
     });
   
-    const res = await fetch('http://192.168.1.2:5000/classify', {
+    const res = await fetch('http://10.0.2.2:5000/classify', {
       method: 'POST',
       body: formData,
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });
+    });    
   
     return await res.json();
   };

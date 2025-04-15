@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import auth from '@react-native-firebase/auth'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 const CustomHeader = ({ title }) => {
   const [username, setUsername] = useState('')
