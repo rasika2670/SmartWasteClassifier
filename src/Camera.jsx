@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Image, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import axios from 'axios';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import CustomButton from './components/CustomButton';
 
 export default function Camera() {
   const [imageUri, setImageUri] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [classified, setClassified] = useState(false);
+
+  const resetState = () => {
+    setImageUri(null);
+    setResult(null);
+    setClassified(false);
+  };
 
   const handleImageSelect = () => {
     launchImageLibrary({ mediaType: 'photo' }, response => {
@@ -37,12 +47,13 @@ export default function Camera() {
         name: 'waste.jpg',
         type: 'image/jpeg',
       });
-  
+
       const response = await axios.post('http://10.0.2.2:5000/classify', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-  
+
       setResult(response.data);
+      setClassified(true);
     } catch (error) {
       console.error('Error uploading image:', error);
       setResult({ error: 'Failed to classify image.' });
@@ -50,22 +61,67 @@ export default function Camera() {
     setLoading(false);
   };
 
+  const handleDone = async () => {
+    if (result && imageUri) {
+      try {
+        const user = auth().currentUser;
+
+        await firestore().collection('Classifier').add({
+          image: imageUri,
+          wasteType: result.category,
+          category: result.predicted_label,
+          disposalMethod: result.disposal_method,
+          timestamp: firestore.FieldValue.serverTimestamp(),
+          userEmail: user?.email || 'N/A',
+          userName: user?.displayName || 'User',
+        });
+
+        console.log('Data saved to Firestore');
+      } catch (error) {
+        console.error('Error saving to Firestore:', error);
+      }
+    }
+    resetState();
+  };
+
+  const handleRetry = () => {
+    resetState();
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Waste Classifier</Text>
 
-      <Button title="Pick Image from Gallery" onPress={handleImageSelect} />
-      <Button title="Take Photo" onPress={handleCameraClick} />
+      {!classified && (
+        <>
+          <CustomButton title="Pick Image from Gallery" onPress={handleImageSelect} />
+          <CustomButton title="Take Photo" onPress={handleCameraClick} />
+        </>
+      )}
 
       {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
 
       {loading && <ActivityIndicator size="large" color="#2A9D8F" />}
 
-      {result && (
+      {result && !loading && (
         <View style={styles.resultBox}>
-          <Text style={styles.resultText}>Label: {result.predicted_label}</Text>
-          <Text style={styles.resultText}>Category: {result.category}</Text>
-          <Text style={styles.resultText}>Disposal Method: {result.disposal_method}</Text>
+          <View style={styles.resultRow}>
+            <Text style={styles.label}>Label:</Text>
+            <Text style={styles.value}>{result.predicted_label}</Text>
+          </View>
+          <View style={styles.resultRow}>
+            <Text style={styles.label}>Category:</Text>
+            <Text style={styles.value}>{result.category}</Text>
+          </View>
+          <View style={styles.resultRow}>
+            <Text style={styles.label}>Disposal Method:</Text>
+            <Text style={styles.value}>{result.disposal_method}</Text>
+          </View>
+
+          <View style={styles.actionButtons}>
+            <CustomButton title="Done" onPress={handleDone} />
+            <CustomButton title="Retry" onPress={handleRetry} />
+          </View>
         </View>
       )}
     </View>
@@ -84,6 +140,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#2A9D8F',
+    margin: 10,
   },
   image: {
     width: 250,
@@ -98,11 +155,31 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     width: '100%',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+    gap: 10,
   },
-  resultText: {
+  resultRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginVertical: 6,
+    gap: 10,
+  },
+  label: {
     fontSize: 16,
-    color: '#264653',
-    marginVertical: 4,
+    fontWeight: '500',
+    color: '#555',
+    width: 120,
+  },
+  value: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1D3557',
+    flexShrink: 1,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 10,
   },
 });
