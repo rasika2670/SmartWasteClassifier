@@ -32,7 +32,6 @@ function MyTabs() {
         tabBarActiveTintColor: '#fff',
         tabBarInactiveTintColor: '#d1f0ec',
         tabBarLabelStyle: {
-          fontSize: 12,
           fontWeight: '600',
           marginBottom: 8,
         },
@@ -45,8 +44,13 @@ function MyTabs() {
         name="Home" 
         component={Home} 
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="home" size={22} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Icon name="home" size={focused ? 24 : 22} color={color} />
+          ),
+          tabBarLabel: ({ focused, color }) => (
+            <Text style={{ color, fontSize: focused ? 14 : 12, fontWeight: '600', marginBottom: 8 }}>
+              Home
+            </Text>
           ),
           header: () => <CustomHeader title="Home" />,
         }}
@@ -55,8 +59,13 @@ function MyTabs() {
         name="Camera" 
         component={Camera} 
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="camera" size={22} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Icon name="camera" size={focused ? 24 : 22} color={color} />
+          ),
+          tabBarLabel: ({ focused, color }) => (
+            <Text style={{ color, fontSize: focused ? 14 : 12, fontWeight: '600', marginBottom: 8 }}>
+              Camera
+            </Text>
           ),
           header: () => <CustomHeader title="Camera" />,
         }}
@@ -65,8 +74,13 @@ function MyTabs() {
         name="Profile" 
         component={Profile} 
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="user" size={22} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Icon name="user" size={focused ? 24 : 22} color={color} />
+          ),
+          tabBarLabel: ({ focused, color }) => (
+            <Text style={{ color, fontSize: focused ? 14 : 12, fontWeight: '600', marginBottom: 8 }}>
+              Profile
+            </Text>
           ),
           header: () => <CustomHeader title="Profile" />,
         }}
@@ -74,7 +88,6 @@ function MyTabs() {
     </Tab.Navigator>
   );
 }
-
 
 function App() {
   return (

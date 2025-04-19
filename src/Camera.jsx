@@ -5,6 +5,7 @@ import axios from 'axios';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import CustomButton from './components/CustomButton';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function Camera() {
   const [imageUri, setImageUri] = useState(null);
@@ -104,23 +105,26 @@ export default function Camera() {
       {loading && <ActivityIndicator size="large" color="#2A9D8F" />}
 
       {result && !loading && (
-        <View style={styles.resultBox}>
-          <View style={styles.resultRow}>
-            <Text style={styles.label}>Label:</Text>
-            <Text style={styles.value}>{result.predicted_label}</Text>
+        <View style={{ justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+          <View style={styles.resultBox}>
+            <View style={styles.resultRow}>
+              <Text style={styles.label}>Label:</Text>
+              <Text style={styles.value}>{result.predicted_label}</Text>
+            </View>
+            <View style={styles.resultRow}>
+              <Text style={styles.label}>Category:</Text>
+              <Text style={styles.value}>{result.category}</Text>
+            </View>
+            <View style={styles.resultRow}>
+              <Text style={styles.label}>Disposal Method:</Text>
+              <Text style={styles.value}>{result.disposal_method}</Text>
+            </View>
           </View>
-          <View style={styles.resultRow}>
-            <Text style={styles.label}>Category:</Text>
-            <Text style={styles.value}>{result.category}</Text>
-          </View>
-          <View style={styles.resultRow}>
-            <Text style={styles.label}>Disposal Method:</Text>
-            <Text style={styles.value}>{result.disposal_method}</Text>
-          </View>
-
           <View style={styles.actionButtons}>
-            <CustomButton title="Done" onPress={handleDone} />
-            <CustomButton title="Retry" onPress={handleRetry} />
+            <CustomButton title="Done" onPress={handleDone} icon={<Icon name="checkbox-marked-circle-outline" size={26} color="#fff" />}
+              iconPosition="left" />
+            <CustomButton title="Retry" onPress={handleRetry} backgroundColor='#e63946' icon={<Icon name="reload" size={26} color="#fff" />}
+              iconPosition="left" />
           </View>
         </View>
       )}
@@ -179,7 +183,7 @@ const styles = StyleSheet.create({
   },
   actionButtons: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 30,
     marginTop: 10,
   },
 });
