@@ -1,9 +1,17 @@
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import moment from 'moment';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Home = () => {
   const [wasteData, setWasteData] = useState([]);
@@ -39,20 +47,36 @@ const Home = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleDelete = async id => {
+    try {
+      await firestore().collection('Classifier').doc(id).delete();
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <Image source={{ uri: item.image }} style={styles.image} />
+
       <View style={styles.cardContent}>
         <Text style={styles.wasteType}>{item.wasteType}</Text>
         <Text style={styles.disposal}>{item.disposalMethod}</Text>
-        <Text style={styles.timestamp}>
-          {item.timestamp?.toDate
-            ? moment(item.timestamp.toDate()).fromNow()
-            : 'Time not available'}
-        </Text>
+
+        <View style={styles.cardBottomRow}>
+          <Text style={styles.timestamp}>
+            {item.timestamp?.toDate
+              ? moment(item.timestamp.toDate()).fromNow()
+              : 'Time not available'}
+          </Text>
+          <TouchableOpacity onPress={() => handleDelete(item.id)} style={styles.deleteBtn}>
+            <Icon name="delete" size={20} color="#E63946" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
+
 
   return (
     <SafeAreaView style={styles.Home}>
@@ -99,7 +123,7 @@ const styles = StyleSheet.create({
   },
   ecoScore: {
     backgroundColor: 'white',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 20,
     alignItems: 'center',
     marginBottom: 20,
@@ -107,12 +131,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 5,
-    elevation: 4,
+    elevation: 5,
   },
   text: {
     fontSize: 24,
     fontWeight: '600',
     marginBottom: 10,
+    color: '#1D3557',
   },
   scoreRow: {
     flexDirection: 'row',
@@ -127,6 +152,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#2A9D8F',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
   },
   scoreValue: {
     fontSize: 28,
@@ -135,16 +164,15 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 15,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 12,
     marginBottom: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    gap: 15,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
   },
   image: {
     height: 100,
@@ -154,20 +182,31 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     flex: 1,
-    justifyContent: 'space-around',
+    paddingLeft: 12,
+    justifyContent: 'space-between',
   },
   wasteType: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#1D3557',
+    marginBottom: 4,
   },
   disposal: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#2A9D8F',
     fontWeight: '500',
+    marginBottom: 6,
+  },
+  cardBottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   timestamp: {
     fontSize: 14,
-    color: '#888',
+    color: '#999',
+  },
+  deleteBtn: {
+    padding: 4,
   },
 });

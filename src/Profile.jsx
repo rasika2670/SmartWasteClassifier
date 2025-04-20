@@ -1,19 +1,33 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import CustomButton from './components/CustomButton';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [displayName, setDisplayName] = useState('');
 
   useEffect(() => {
     const currentUser = auth().currentUser;
     if (currentUser) {
       setUser(currentUser);
+      setDisplayName(currentUser.displayName || '');
     }
   }, []);
+
+  const handleSave = async () => {
+    try {
+      await auth().currentUser.updateProfile({ displayName });
+      setEditing(false);
+    } catch (error) {
+      console.error('Failed to update name:', error);
+    }
+  };
 
   const handleLogout = () => {
     auth()
@@ -27,9 +41,41 @@ const Profile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.profileCard}>
-        <FIcon name="user-circle" size={80} color="#2A9D8F" style={styles.avatar} />
-        <Text style={styles.username}>{user?.displayName || 'Unnamed User'}</Text>
+        <View style={styles.avatarWrapper}>
+          {user?.photoURL ? (
+            <Image source={{ uri: user.photoURL }} style={styles.avatarImage} />
+          ) : (
+            <FIcon name="user-circle" size={80} color="#2A9D8F" />
+          )}
+        </View>
+
+
+        <View style={styles.nameRow}>
+          {editing ? (
+            <TextInput
+              style={styles.nameInput}
+              value={displayName}
+              onChangeText={setDisplayName}
+              placeholder="Enter your name"
+              placeholderTextColor="#aaa"
+            />
+          ) : (
+            <Text style={styles.username}>
+              {displayName || 'Unnamed User'}
+            </Text>
+          )}
+
+          <TouchableOpacity onPress={editing ? handleSave : () => setEditing(true)}>
+            <MIcon
+              name={editing ? 'check-circle-outline' : 'edit'}
+              size={24}
+              color="#2A9D8F"
+            />
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.divider} />
+
         <View style={styles.row}>
           <FIcon name="envelope" size={22} color="#6c757d" />
           <Text style={styles.info}>{user?.email}</Text>
@@ -67,11 +113,25 @@ const styles = StyleSheet.create({
   avatar: {
     marginBottom: 10,
   },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 10,
+  },
   username: {
     fontSize: 22,
     fontWeight: '700',
     color: '#1d3557',
-    marginBottom: 10,
+  },
+  nameInput: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1d3557',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingVertical: 4,
+    minWidth: 150,
   },
   divider: {
     width: '100%',
@@ -93,5 +153,5 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 30,
-  },
+  }
 });
