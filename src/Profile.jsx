@@ -1,16 +1,19 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import CustomButton from './components/CustomButton';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import WasteInfoCard from './components/WasteInfoCard';
+import { wasteData } from './utils/wasteData';
 
 const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null);
   const [editing, setEditing] = useState(false);
   const [displayName, setDisplayName] = useState('');
+  const [expandedWaste, setExpandedWaste] = useState(null);
 
   useEffect(() => {
     const currentUser = auth().currentUser;
@@ -38,17 +41,21 @@ const Profile = ({ navigation }) => {
       });
   };
 
+  const handleToggleExpand = (wasteName) => {
+    setExpandedWaste(expandedWaste === wasteName ? null : wasteName);
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
+      {/* Profile Card Section */}
       <View style={styles.profileCard}>
         <View style={styles.avatarWrapper}>
           {user?.photoURL ? (
             <Image source={{ uri: user.photoURL }} style={styles.avatarImage} />
           ) : (
-            <FIcon name="user-circle" size={80} color="#2A9D8F" />
+            <FIcon name="user-circle" size={90} color="#2A9D8F" />
           )}
         </View>
-
 
         <View style={styles.nameRow}>
           {editing ? (
@@ -82,6 +89,23 @@ const Profile = ({ navigation }) => {
         </View>
       </View>
 
+      {/* Waste Management Section */}
+      <Text style={styles.sectionTitle}>Waste Management Tips</Text>
+      <Text style={styles.sectionSubtitle}>
+        Learn how to classify and dispose of waste properly to contribute to a cleaner environment.
+      </Text>
+
+      {/* Waste Info Cards */}
+      {wasteData.map((waste) => (
+        <WasteInfoCard
+          key={waste.name}
+          waste={waste}
+          onToggleExpand={handleToggleExpand}
+          isExpanded={expandedWaste === waste.name}
+        />
+      ))}
+
+      {/* Logout Button */}
       <View style={styles.buttonContainer}>
         <CustomButton
           title="Logout"
@@ -91,7 +115,7 @@ const Profile = ({ navigation }) => {
           iconPosition="left"
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -101,17 +125,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#f7f7f7', // Soft background color
   },
   profileCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    backgroundColor: '#ffffff',
+    borderRadius: 15,
     padding: 24,
     alignItems: 'center',
-    elevation: 4,
+    elevation: 8,  // Deeper shadow for more depth
+    marginBottom: 20,  // Space between profile and waste info section
+    shadowColor: '#000',  // Subtle shadow for elevation
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
   },
-  avatar: {
-    marginBottom: 10,
+  avatarWrapper: {
+    marginBottom: 15,
+  },
+  avatarImage: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 3,
+    borderColor: '#2A9D8F', // Border color to match profile color
   },
   nameRow: {
     flexDirection: 'row',
@@ -120,17 +156,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   username: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '700',
-    color: '#1d3557',
+    color: '#1d3557', // Darker shade for text
+    textAlign: 'center',
   },
   nameInput: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600',
     color: '#1d3557',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    paddingVertical: 4,
+    paddingVertical: 5,
     minWidth: 150,
   },
   divider: {
@@ -151,7 +188,22 @@ const styles = StyleSheet.create({
     color: '#333',
     flexShrink: 1,
   },
+  sectionTitle: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#2A9D8F',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  sectionSubtitle: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
   buttonContainer: {
     marginTop: 30,
-  }
+    marginBottom: 100,
+    paddingHorizontal: 40,
+  },
 });
