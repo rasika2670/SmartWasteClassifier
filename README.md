@@ -1,97 +1,202 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# SmartWasteClassifier
 
-# Getting Started
+A React Native mobile app that lets users snap or select photos of waste, classifies them via a Hugging Face Vision Transformer model served by a Flask API, and helps users dispose of waste responsibly. Classified results are stored in Firebase Firestore, and users can track their eco-impact over time.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## 🚀 Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- 📸 **Image Classification**  
+  • Pick from gallery or take a photo  
+  • Sends image to Flask backend for AI classification  
+  • Uses a ViT (Vision Transformer) model under the hood  
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- ♻️ **Waste Categories & Disposal Tips**  
+  • Biodegradable, Recyclable (plastic, paper, metal, glass, cartons, textiles, batteries), Hazardous, E-Waste & General Waste  
+  • Clear disposal instructions for each category  
 
-```sh
-# Using npm
-npm start
+- 🔒 **Authentication**  
+  • Firebase Email/Password & Google Sign-In  
+  • Secure user sessions  
 
-# OR using Yarn
-yarn start
+- 💾 **Data Persistence**  
+  • Saves each classification (image URL, category, timestamp, user info) to Firestore  
+
+- 📊 **Impact Dashboard** (coming soon)  
+  • Eco-Score, item count, category breakdown  
+
+---
+
+## 📝 Tech Stack
+
+| Layer            | Technology                             |
+| ---------------- | -------------------------------------- |
+| Mobile App       | React Native 0.78.1, JavaScript (ES6)  |
+| Navigation       | React Navigation (Bottom Tabs & Stack) |
+| Styling & UI     | Custom components, Vector Icons        |
+| Image Picker     | `react-native-image-picker`            |
+| State & Network  | Axios                                  |
+| Analytics & Chart| `react-native-chart-kit`, `react-native-svg` |
+| Backend Service  | Flask + Python, Hugging Face `transformers` |
+| Authentication   | Firebase Auth                          |
+| Database         | Firebase Firestore                     |
+| Continuous Env   | `react-native-dotenv`                  |
+
+---
+
+## 📂 Project Structure
+
+```
+SmartWasteClassifier/
+├── android/                 # Android native project
+├── ios/                     # iOS native project
+├── model/                   # (backend) ML model & mapper
+│   ├── classifier.py
+│   └── waste_mapper.py
+├── src/
+│   ├── components/          # Reusable UI components
+│   │   ├── CustomButton.js
+│   │   ├── WasteInfoCard.js
+│   │   └── Header.js
+│   ├── Camera.js
+│   ├── Home.js
+│   ├── Profile.js
+│   ├── Login.js
+│   └── SignUp.js
+├── App.js                   # Entry point & navigation
+├── package.json
+├── .env                     # React Native env variables
+└── backend/
+    ├── app.py               # Flask server
+    └── requirements.txt     # Python deps
 ```
 
-## Step 2: Build and run your app
+---
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## 🛠 Prerequisites
 
-### Android
+- **Node.js** ≥ 18  
+- **Yarn** or **npm**  
+- **Android Studio** / **Xcode** (for emulators)  
+- **Python** ≥ 3.8 (for backend)  
+- **Firebase project** with Auth & Firestore enabled  
 
-```sh
-# Using npm
-npm run android
+---
 
-# OR using Yarn
-yarn android
+## 🔧 Setup & Installation
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/your-username/SmartWasteClassifier.git
+cd SmartWasteClassifier
 ```
 
-### iOS
+### 2. Mobile App
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+1. **Install JS dependencies**  
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+2. **Create `.env`** in project root (used by `react-native-dotenv`):
 
-```sh
-bundle install
-```
+   ```env
+   # .env
+   FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
+   FIREBASE_AUTH_DOMAIN=YOUR_PROJECT.firebaseapp.com
+   FIREBASE_PROJECT_ID=YOUR_PROJECT_ID
+   FIREBASE_STORAGE_BUCKET=YOUR_PROJECT.appspot.com
+   FIREBASE_MESSAGING_SENDER_ID=YOUR_SENDER_ID
+   FIREBASE_APP_ID=YOUR_APP_ID
+   ```
+   
+3. **Run on Android**  
+   ```bash
+   npx react-native run-android
+   ```
+   
+4. **Run on iOS**  
+   ```bash
+   cd ios && pod install
+   cd ..
+   npx react-native run-ios
+   ```
 
-Then, and every time you update your native dependencies, run:
+### 3. Backend (Flask API)
 
-```sh
-bundle exec pod install
-```
+1. **Navigate to backend folder**  
+   ```bash
+   cd backend
+   ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+2. **Create & activate virtualenv**  
+   ```bash
+   python -m venv venv
+   source venv/bin/activate   # macOS/Linux
+   venv\Scripts\activate      # Windows
+   ```
 
-```sh
-# Using npm
-npm run ios
+3. **Install Python dependencies**  
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-# OR using Yarn
-yarn ios
-```
+4. **Run the Flask server**  
+   ```bash
+   python app.py
+   ```
+   The API will listen on `http://0.0.0.0:5000/classify`.
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 📱 Usage
 
-## Step 3: Modify your app
+1. **Sign Up / Login** via email or Google.
+2. **Tap “Camera”** tab to snap or pick a photo.
+3. **Wait for classification** (spinner).
+4. **View results**: label, category, disposal method.
+5. **Tap “Done”** to save to Firestore, or “Retry” to reshoot.
+6. **Check “Profile”** for your saved history and eco-score (soon).
 
-Now that you have successfully run the app, let's make changes!
+---
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## 📸 Screenshots
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+<!--
+![Home Screen](./assets/screenshots/home.png)
+![Camera Screen](./assets/screenshots/camera.png)
+![Profile Screen](./assets/screenshots/profile.png)
+-->
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+---
 
-## Congratulations! :tada:
+## 🤝 Contributing
 
-You've successfully run and modified your React Native App. :partying_face:
+1. Fork this repo  
+2. Create a feature branch (`git checkout -b feature/Name`)  
+3. Commit your changes (`git commit -m 'Add feature'`)  
+4. Push to branch (`git push origin feature/Name`)  
+5. Open a Pull Request  
 
-### Now what?
+---
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+## 📄 License
 
-# Troubleshooting
+This project is licensed under the **MIT License**.  
+See the [LICENSE](LICENSE) file for details.
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+---
 
-# Learn More
+## 🙏 Acknowledgements
 
-To learn more about React Native, take a look at the following resources:
+- 🤗 [Hugging Face Transformers](https://huggingface.co/docs/transformers)  
+- 🐍 [Flask](https://flask.palletsprojects.com/)  
+- ⚛️ [React Native](https://reactnative.dev/)  
+- 🔥 [Firebase](https://firebase.google.com/)  
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+---
+
+*Happy coding & thank you for making our planet a little greener!* 🌿
+
