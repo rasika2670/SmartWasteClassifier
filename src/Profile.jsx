@@ -88,23 +88,23 @@ const Profile = ({ navigation }) => {
           <Text style={styles.info}>{user?.email}</Text>
         </View>
       </View>
+      <View style={styles.profileCard}>
+        {/* Waste Management Section */}
+        <Text style={styles.sectionTitle}>Waste Management Tips</Text>
+        <Text style={styles.sectionSubtitle}>
+          Learn how to classify and dispose of waste properly to contribute to a cleaner environment.
+        </Text>
 
-      {/* Waste Management Section */}
-      <Text style={styles.sectionTitle}>Waste Management Tips</Text>
-      <Text style={styles.sectionSubtitle}>
-        Learn how to classify and dispose of waste properly to contribute to a cleaner environment.
-      </Text>
-
-      {/* Waste Info Cards */}
-      {wasteData.map((waste) => (
-        <WasteInfoCard
-          key={waste.name}
-          waste={waste}
-          onToggleExpand={handleToggleExpand}
-          isExpanded={expandedWaste === waste.name}
-        />
-      ))}
-
+        {/* Waste Info Cards */}
+        {wasteData.map((waste) => (
+          <WasteInfoCard
+            key={waste.name}
+            waste={waste}
+            onToggleExpand={handleToggleExpand}
+            isExpanded={expandedWaste === waste.name}
+          />
+        ))}
+      </View>
       {/* Logout Button */}
       <View style={styles.buttonContainer}>
         <CustomButton
@@ -202,8 +202,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonContainer: {
-    marginTop: 30,
-    marginBottom: 100,
+    marginTop: 20,
+    marginBottom: 120,
     paddingHorizontal: 40,
   },
 });

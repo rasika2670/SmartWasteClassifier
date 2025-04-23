@@ -55,7 +55,6 @@ const WastePieChart = ({ wasteData }) => {
                     }}
                     accessor="count"
                     backgroundColor="transparent"
-                    paddingLeft="15"
                     absolute
                 />
             ) : (
