@@ -6,6 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import CustomButton from './components/CustomButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FIcon from 'react-native-vector-icons/FontAwesome';
 
 export default function Camera() {
   const [imageUri, setImageUri] = useState(null);
@@ -43,11 +44,7 @@ export default function Camera() {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append('image', {
-        uri,
-        name: 'waste.jpg',
-        type: 'image/jpeg',
-      });
+      formData.append('image', { uri, name: 'waste.jpg', type: 'image/jpeg' });
 
       const response = await axios.post('http://10.0.2.2:5000/classify', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -66,7 +63,6 @@ export default function Camera() {
     if (result && imageUri) {
       try {
         const user = auth().currentUser;
-
         await firestore().collection('Classifier').add({
           image: imageUri,
           wasteType: result.category,
@@ -76,8 +72,6 @@ export default function Camera() {
           userEmail: user?.email || 'N/A',
           userName: user?.displayName || 'User',
         });
-
-        console.log('Data saved to Firestore');
       } catch (error) {
         console.error('Error saving to Firestore:', error);
       }
@@ -85,28 +79,43 @@ export default function Camera() {
     resetState();
   };
 
-  const handleRetry = () => {
-    resetState();
-  };
+  const handleRetry = () => resetState();
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Waste Classifier</Text>
 
-      {!classified && (
-        <>
-          <CustomButton title="Pick Image from Gallery" onPress={handleImageSelect} />
-          <CustomButton title="Take Photo" onPress={handleCameraClick} />
-        </>
+      {imageUri ? (
+        <Image source={{ uri: imageUri }} style={styles.preview} />
+      ) : (
+        <View style={styles.placeholder}>
+          <FIcon name="camera" size={48} color="#ccc" />
+          <Text style={styles.placeholderText}>No image selected</Text>
+        </View>
       )}
 
-      {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+      {loading && <ActivityIndicator size="large" color="#2A9D8F" style={{ marginTop: 20 }} />}
 
-      {loading && <ActivityIndicator size="large" color="#2A9D8F" />}
+      {!classified && !loading && (
+        <View style={styles.actionsRow}>
+          <CustomButton
+            title="Gallery"
+            onPress={handleImageSelect}
+            icon={<FIcon name="image" size={20} color="#fff" />}
+            style={styles.smallButton}
+          />
+          <CustomButton
+            title="Camera"
+            onPress={handleCameraClick}
+            icon={<FIcon name="camera" size={20} color="#fff" />}
+            style={styles.smallButton}
+          />
+        </View>
+      )}
 
       {result && !loading && (
-        <View style={{ justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-          <View style={styles.resultBox}>
+        <>
+          <View style={styles.resultCard}>
             <View style={styles.resultRow}>
               <Text style={styles.label}>Label:</Text>
               <Text style={styles.value}>{result.predicted_label}</Text>
@@ -116,17 +125,27 @@ export default function Camera() {
               <Text style={styles.value}>{result.category}</Text>
             </View>
             <View style={styles.resultRow}>
-              <Text style={styles.label}>Disposal Method:</Text>
+              <Text style={styles.label}>Disposal:</Text>
               <Text style={styles.value}>{result.disposal_method}</Text>
             </View>
           </View>
-          <View style={styles.actionButtons}>
-            <CustomButton title="Done" onPress={handleDone} icon={<Icon name="checkbox-marked-circle-outline" size={26} color="#fff" />}
-              iconPosition="left" />
-            <CustomButton title="Retry" onPress={handleRetry} backgroundColor='#e63946' icon={<Icon name="reload" size={26} color="#fff" />}
-              iconPosition="left" />
+
+          <View style={styles.actionsRow}>
+            <CustomButton
+              title="Done"
+              onPress={handleDone}
+              icon={<Icon name="checkbox-marked-circle-outline" size={20} color="#fff" />}
+              style={styles.smallButton}
+            />
+            <CustomButton
+              title="Retry"
+              onPress={handleRetry}
+              backgroundColor="#e63946"
+              icon={<Icon name="reload" size={20} color="#fff" />}
+              style={styles.smallButton}
+            />
           </View>
-        </View>
+        </>
       )}
     </View>
   );
@@ -134,56 +153,79 @@ export default function Camera() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#F4F6F8',
     padding: 20,
     alignItems: 'center',
-    gap: 15,
-    flex: 1,
-    backgroundColor: '#fff',
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: '700',
     color: '#2A9D8F',
-    margin: 10,
+    marginBottom: 20,
   },
-  image: {
-    width: 250,
-    height: 250,
-    marginTop: 20,
-    borderRadius: 12,
-    resizeMode: 'cover',
-  },
-  resultBox: {
-    marginTop: 20,
-    backgroundColor: '#e3f9f5',
-    padding: 15,
-    borderRadius: 10,
+  preview: {
     width: '100%',
-    alignItems: 'flex-start',
-    flexDirection: 'column',
-    gap: 10,
+    aspectRatio: 1,
+    borderRadius: 12,
+    marginBottom: 20,
+    backgroundColor: '#e0e0e0',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  placeholder: {
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 12,
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    borderColor: '#CCC',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  placeholderText: {
+    marginTop: 8,
+    color: '#AAA',
+    fontSize: 16,
+  },
+  actionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '100%',
+    marginVertical: 20,
+  },
+  smallButton: {
+    flex: 1,
+  },
+  resultCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 6,
+    elevation: 4,
   },
   resultRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginVertical: 6,
-    gap: 10,
+    marginBottom: 8,
   },
   label: {
+    flex: 1,
     fontSize: 16,
     fontWeight: '500',
     color: '#555',
-    width: 120,
   },
   value: {
+    flex: 2,
     fontSize: 16,
     fontWeight: '600',
     color: '#1D3557',
-    flexShrink: 1,
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    gap: 30,
-    marginTop: 10,
   },
 });
