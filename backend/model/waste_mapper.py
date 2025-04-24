@@ -14,7 +14,7 @@ def map_to_waste_category(label):
         return "Recyclable - Metal", "Dispose in metal bin"
     
     # Recyclable - Paper
-    elif any(word in label for word in ['paper', 'book', 'magazine', 'envelope', 'cardboard', 'newspaper', 'notebook', 'post-it', 'paper towel', 'wrapping paper']):
+    elif any(word in label for word in ['paper', 'book', 'magazine', 'envelope', 'cardboard', 'newspaper', 'notebook', 'post-it', 'paper towel', 'wrapping paper', 'binder']):
         return "Recyclable - Paper", "Dispose in paper bin"
     
     # Recyclable - Glass
@@ -26,7 +26,7 @@ def map_to_waste_category(label):
         return "Hazardous Waste", "Send to e-waste recycling center"
     
     # Recyclable - Textiles (Clothing)
-    elif any(word in label for word in ['t-shirt', 'jersey', 'shirt', 'pants', 'jacket', 'sweater', 'shoes', 'jeans', 'clothing', 'sarong','fabric']):
+    elif any(word in label for word in ['t-shirt', 'jersey', 'shirt', 'pants', 'jacket', 'sweater', 'shoes', 'jeans', 'clothing', 'sarong','fabric', 'overskirt']):
         return "Recyclable - Textiles", "Donate or recycle in textile bin"
     
     # Electronic Waste (small devices)

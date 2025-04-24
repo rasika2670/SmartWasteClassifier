@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
-  StyleSheet, Alert, Image, ImageBackground
+  StyleSheet, Alert, ImageBackground, ScrollView
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -39,10 +39,10 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <ImageBackground
-          source={require('./assets/recycle-icon.png')} // adjust the path based on your project
+          source={require('./assets/recycle-icon.png')}
           style={styles.imageBackground}
           resizeMode="contain"
         >
@@ -58,6 +58,7 @@ const Login = () => {
           <Icon name="envelope" size={16} color="#2A9D8F" style={styles.inputIcon} />
           <TextInput
             placeholder="Email"
+            placeholderTextColor="#ccc"
             style={styles.input}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -68,36 +69,38 @@ const Login = () => {
           <Icon name="lock" size={20} color="#2A9D8F" style={styles.inputIcon} />
           <TextInput
             placeholder="Password"
+            placeholderTextColor="#ccc"
             style={styles.input}
             secureTextEntry
             onChangeText={setPassword}
           />
         </View>
 
-        <Text style={styles.forgot}>Forgot Password ?</Text>
-
-        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
+        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin} activeOpacity={0.8}>
           <Text style={styles.loginBtnText}>Log in</Text>
         </TouchableOpacity>
 
         <View style={styles.separatorContainer}>
           <View style={styles.separator} />
-          <Text style={styles.or}>or Login with</Text>
+          <Text style={styles.or}>or Log in with</Text>
           <View style={styles.separator} />
         </View>
 
         <TouchableOpacity style={styles.googleButton} onPress={signInWithGoogle}>
-          <Icon name="google" size={20} style={styles.googleIcon} />
-          <Text style={styles.googleText}>Google</Text>
+          <Icon name="google" size={20} color="#DB4437" style={styles.googleIcon} />
+          <Text style={styles.googleText}>Continue with Google</Text>
         </TouchableOpacity>
 
         <Text style={styles.signup}>
-          Create an account? <Text style={styles.signupLink} onPress={() => navigation.navigate('SignUp')}>SignUp</Text>
+          Don't have an account?{' '}
+          <Text style={styles.signupLink} onPress={() => navigation.navigate('SignUp')}>
+            Sign up
+          </Text>
         </Text>
       </View>
 
       <View style={styles.footer} />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -105,6 +108,7 @@ export default Login;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
+
   header: {
     backgroundColor: '#2A9D8F',
     height: '30%',
@@ -115,119 +119,152 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 40
   },
+
   imageBackground: {
     width: '100%',
     height: 140,
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   logoText: {
-    fontSize: 40,
+    fontSize: 38,
     fontWeight: 'bold',
     color: 'white',
-    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowColor: 'rgba(0,0,0,0.3)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 4,
   },
+
   loginText: {
     color: '#fff',
-    fontSize: 28,
+    fontSize: 26,
     marginTop: 5,
     alignSelf: 'flex-start'
   },
+
   content: {
     padding: 25,
     flex: 1,
+    alignItems: 'center'
   },
+
   welcome: {
-    fontSize: 40,
-    fontWeight: '400',
-    marginBottom: 20,
-    alignSelf: 'center'
+    fontSize: 28,
+    fontWeight: '600',
+    color: '#2A9D8F',
+    marginBottom: 25
   },
+
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 12,
+    backgroundColor: '#f9f9f9',
     marginBottom: 15,
     paddingLeft: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    width: '100%',
   },
+
   inputIcon: {
-    marginRight: 10
+    marginRight: 10,
+    opacity: 0.8,
   },
+
   input: {
     flex: 1,
     paddingVertical: 10,
-    paddingHorizontal: 5,
+    paddingHorizontal: 8,
+    fontSize: 16,
+    color: '#333'
   },
-  forgot: {
-    alignSelf: 'flex-end',
-    color: 'red',
-    marginBottom: 20,
-  },
+
   loginBtn: {
-    backgroundColor: '#2A9D8F',
-    paddingVertical: 15,
-    borderRadius: 25,
     alignItems: 'center',
-    marginBottom: 20,
+    justifyContent: 'center',
+    backgroundColor: '#2A9D8F',
+    paddingVertical: 12,
+    borderRadius: 30,   
+    borderWidth: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 3,
     width: '60%',
-    alignSelf: 'center'
+    margin: 16,
   },
+
   loginBtnText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold'
   },
+
   separatorContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+    width: '80%'
   },
+
   separator: {
     flex: 1,
     height: 1,
     backgroundColor: '#ccc',
   },
+
   or: {
     marginHorizontal: 8,
     color: '#666',
   },
+
   googleButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#ddd',
     borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 12,
-    borderRadius: 25,
-    marginBottom: 20,
-    width: '60%',
-    alignSelf: 'center'
+    paddingVertical: 12,
+    borderRadius: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 3,
+    width: '75%',
+    marginBottom: 20
   },
+
   googleIcon: {
-    width: 20,
-    height: 20,
     marginRight: 10,
   },
+
   googleText: {
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: '500',
+    color: '#333'
   },
+
   signup: {
     textAlign: 'center',
     color: '#000',
   },
+
   signupLink: {
     color: '#2A9D8F',
     fontWeight: 'bold'
   },
+
   footer: {
-    backgroundColor: '#2A9D8F',
-    height: '8%',
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
+    paddingBottom:100
   }
 });

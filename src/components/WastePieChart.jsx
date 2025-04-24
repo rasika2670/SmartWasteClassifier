@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
 
 const chartWidth = Dimensions.get('window').width - 40;
@@ -38,7 +38,7 @@ const WastePieChart = ({ wasteData }) => {
         }));
 
     return (
-        <View style={{ marginBottom: 20, backgroundColor: '#fff', borderRadius: 16, padding: 12 }}>
+        <View style={styles.card}>
             <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 10, color: '#1D3557' }}>
                 Eco Insights
             </Text>
@@ -65,3 +65,18 @@ const WastePieChart = ({ wasteData }) => {
 };
 
 export default WastePieChart;
+
+const styles = StyleSheet.create({
+    card : {
+        marginBottom: 20, 
+        backgroundColor: '#fff', 
+        borderRadius: 16, 
+        padding: 12, marginTop: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
+        elevation: 2,
+        margin: 1
+    }
+});

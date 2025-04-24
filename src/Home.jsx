@@ -108,14 +108,16 @@ export default Home;
 const styles = StyleSheet.create({
   Home: {
     flex: 1,
-    paddingHorizontal: 20,
     backgroundColor: '#F7F7F7',
+    paddingHorizontal: 10,
+    paddingBottom:60
   },
   card: {
     flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 16,
     padding: 12,
+    margin:1,
     marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -135,13 +137,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   wasteType: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#1D3557',
     marginBottom: 4,
   },
   disposal: {
-    fontSize: 18,
+    fontSize: 14,
     color: '#2A9D8F',
     fontWeight: '500',
     marginBottom: 6,
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   timestamp: {
-    fontSize: 14,
+    fontSize: 10,
     color: '#999',
   },
   deleteBtn: {
