@@ -9,7 +9,7 @@ const WasteInfoCard = ({ waste, onToggleExpand, isExpanded }) => {
       <View style={styles.cardHeader}>
         {/* Waste Icon and Name on the Left */}
         <View style={styles.iconTextContainer}>
-          <FIcon name={waste.icon} size={30} color={waste.color} />
+          <FIcon name={waste.icon} size={20} color={waste.color} />
           <Text style={[styles.cardTitle, { color: waste.color }]}>{waste.name}</Text>
         </View>
 
@@ -60,17 +60,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardTitle: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '600',
     marginLeft: 10,
   },
   disposalMethod: {
-    fontSize: 18,
+    fontSize: 15,
     color: '#333',
     marginBottom: 10,
   },
   description: {
-    fontSize: 16,
+    fontSize: 12,
     color: '#555',
   },
 });

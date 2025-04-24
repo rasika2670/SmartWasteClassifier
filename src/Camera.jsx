@@ -51,15 +51,33 @@ export default function Camera() {
     });
   };
 
-  const handleCameraClick = () => {
-    launchCamera({ mediaType: 'photo', quality: 1 }, res => {
-      if (!res.didCancel && !res.errorCode && res.assets?.[0]?.uri) {
-        const uri = normalizeUri(res.assets[0].uri);
-        setImageUri(uri);
-        classifyWaste(uri);
+  const handleCameraClick = async () => {
+    try {
+      const permissionResult = await request(
+        Platform.OS === 'android'
+          ? PERMISSIONS.ANDROID.CAMERA
+          : PERMISSIONS.IOS.CAMERA
+      );
+  
+      if (permissionResult === RESULTS.GRANTED) {
+        launchCamera({ mediaType: 'photo', quality: 1 }, res => {
+          if (!res.didCancel && !res.errorCode && res.assets?.[0]?.uri) {
+            const uri = normalizeUri(res.assets[0].uri);
+            setImageUri(uri);
+            classifyWaste(uri);
+          } else {
+            console.log('Camera cancelled or failed:', res.errorCode);
+          }
+        });
+      } else {
+        Alert.alert('Camera Permission Denied', 'Please allow camera access in settings.');
       }
-    });
+    } catch (err) {
+      console.error('Camera launch failed:', err);
+      Alert.alert('Error', 'Failed to open camera.');
+    }
   };
+  
 
   const normalizeUri = (uri) => {
     if (Platform.OS === 'android' && !uri.startsWith('file://')) {

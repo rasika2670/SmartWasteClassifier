@@ -4,7 +4,7 @@ from model.classifier import classify_image
 from model.waste_mapper import map_to_waste_category
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for cross-origin requests from your React Native app
+CORS(app)  # Allow CORS for React Native requests
 
 @app.route('/classify', methods=['POST'])
 def classify():
@@ -12,28 +12,28 @@ def classify():
         return jsonify({'error': 'No image provided'}), 400
 
     file = request.files['image']
-    
-    # Check if the file is a valid image (optional validation)
+
+    # Optional: Validate image MIME type
     if not file.mimetype.startswith('image/'):
         return jsonify({'error': 'Invalid image file'}), 400
-    
-    # Read image bytes and classify
-    image_bytes = file.read()
-    label = classify_image(image_bytes)
-    
-    # Map the predicted label to a waste category
-    category, method = map_to_waste_category(label)
 
-    # Debug: print the backend result for verification
-    print(f"Label: {label}, Category: {category}, Disposal Method: {method}")
+    try:
+        image_bytes = file.read()
+        label = classify_image(image_bytes)
+        category, method = map_to_waste_category(label)
 
-    # Return classification results
-    return jsonify({
-        "predicted_label": label,
-        "category": category,
-        "disposal_method": method
-    })
+        print(f"[DEBUG] Label: {label}, Category: {category}, Disposal Method: {method}")
+
+        return jsonify({
+            "predicted_label": label,
+            "category": category,
+            "disposal_method": method
+        })
+
+    except Exception as e:
+        print(f"[ERROR] Classification failed: {e}")
+        return jsonify({'error': 'Classification failed'}), 500
 
 if __name__ == "__main__":
-    # Run the Flask app on 0.0.0.0 to make it accessible from other devices on the same network
+    # Run on all interfaces for LAN access
     app.run(debug=True, host="0.0.0.0", port=5000)

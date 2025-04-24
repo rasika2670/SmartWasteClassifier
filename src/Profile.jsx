@@ -75,7 +75,7 @@ const Profile = ({ navigation }) => {
           <TouchableOpacity onPress={editing ? handleSave : () => setEditing(true)}>
             <MIcon
               name={editing ? 'check-circle-outline' : 'edit'}
-              size={24}
+              size={20}
               color="#2A9D8F"
             />
           </TouchableOpacity>
@@ -84,7 +84,7 @@ const Profile = ({ navigation }) => {
         <View style={styles.divider} />
 
         <View style={styles.row}>
-          <FIcon name="envelope" size={22} color="#6c757d" />
+          <FIcon name="envelope" size={16} color="#6c757d" />
           <Text style={styles.info}>{user?.email}</Text>
         </View>
       </View>
@@ -156,13 +156,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   username: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '700',
     color: '#1d3557', // Darker shade for text
     textAlign: 'center',
   },
   nameInput: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '600',
     color: '#1d3557',
     borderBottomWidth: 1,
@@ -184,19 +184,19 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   info: {
-    fontSize: 18,
+    fontSize: 14,
     color: '#333',
     flexShrink: 1,
   },
   sectionTitle: {
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: '700',
     color: '#2A9D8F',
     marginBottom: 10,
     textAlign: 'center',
   },
   sectionSubtitle: {
-    fontSize: 16,
+    fontSize: 12,
     color: '#555',
     textAlign: 'center',
     marginBottom: 20,
