@@ -15,25 +15,20 @@ def classify():
 
     # Optional: Validate image MIME type
     if not file.mimetype.startswith('image/'):
-        return jsonify({'error': 'Invalid image file'}), 400
+        return jsonify({'error': 'Invalid file type'}), 400
 
     try:
         image_bytes = file.read()
-        label = classify_image(image_bytes)
-        category, method = map_to_waste_category(label)
-
-        print(f"[DEBUG] Label: {label}, Category: {category}, Disposal Method: {method}")
-
+        prediction = classify_image(image_bytes)  # Replace with your image classification function
+        waste_category, disposal_method = map_to_waste_category(prediction)
         return jsonify({
-            "predicted_label": label,
-            "category": category,
-            "disposal_method": method
+            'predicted_label': prediction,
+            'category': waste_category,
+            'disposal_method': disposal_method
         })
-
     except Exception as e:
-        print(f"[ERROR] Classification failed: {e}")
-        return jsonify({'error': 'Classification failed'}), 500
+        print(f"Error: {e}")
+        return jsonify({'error': 'Internal server error'}), 500
 
-if __name__ == "__main__":
-    # Run on all interfaces for LAN access
-    app.run(debug=True, host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)  # Listen on all interfaces

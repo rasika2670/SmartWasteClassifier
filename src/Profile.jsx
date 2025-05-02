@@ -50,11 +50,7 @@ const Profile = ({ navigation }) => {
       {/* Profile Card Section */}
       <View style={styles.profileCard}>
         <View style={styles.avatarWrapper}>
-          {user?.photoURL ? (
-            <Image source={{ uri: user.photoURL }} style={styles.avatarImage} />
-          ) : (
-            <FIcon name="user-circle" size={90} color="#2A9D8F" />
-          )}
+          <FIcon name="user-circle" size={90} color="#2A9D8F" />
         </View>
 
         <View style={styles.nameRow}>

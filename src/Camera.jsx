@@ -21,12 +21,13 @@ const requestCameraPermission = async () => {
   console.log('Camera permission:', result);
 };
 
-// Your machine’s local IP (update accordingly)
-const SERVER_IP = '192.168.1.2';
+// Your machine’s local IP (update accordingly for physical devices)
+const SERVER_IP = '192.168.68.249'; // Change this to your machine's local IP
 
+// Dynamically select base URL based on platform
 const baseURL = Platform.select({
-  ios: 'http://localhost:5000',
-  android: `http://${SERVER_IP}:5000`,
+  ios: 'http://localhost:5000', // Works on iOS simulators
+  android: `http://${SERVER_IP}:5000`, // Use local IP for Android emulator or real devices
 });
 
 export default function Camera() {
@@ -77,7 +78,6 @@ export default function Camera() {
       Alert.alert('Error', 'Failed to open camera.');
     }
   };
-  
 
   const normalizeUri = (uri) => {
     if (Platform.OS === 'android' && !uri.startsWith('file://')) {
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '700',
     color: '#2A9D8F',
     marginBottom: 20,

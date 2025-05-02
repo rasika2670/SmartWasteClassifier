@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import firestore from '@react-native-firebase/firestore';
@@ -48,12 +41,29 @@ const Home = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleDelete = async id => {
-    try {
-      await firestore().collection('Classifier').doc(id).delete();
-    } catch (error) {
-      console.error('Error deleting item:', error);
-    }
+  const handleDelete = id => {
+    Alert.alert(
+      'Confirm Deletion',
+      'Are you sure you want to delete this waste entry?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await firestore().collection('Classifier').doc(id).delete();
+            } catch (error) {
+              console.error('Error deleting item:', error);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const renderItem = ({ item }) => (
@@ -82,11 +92,7 @@ const Home = () => {
         <Text style={{ textAlign: 'center', marginTop: 50 }}>Loading...</Text>
       ) : (
         <FlatList
-          ListHeaderComponent={
-            <>
-              <WastePieChart wasteData={wasteData} />
-            </>
-          }
+          ListHeaderComponent={<WastePieChart wasteData={wasteData} />}
           data={wasteData}
           keyExtractor={item => item.id}
           renderItem={renderItem}
@@ -110,14 +116,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F7F7F7',
     paddingHorizontal: 10,
-    paddingBottom:60
+    paddingBottom: 60,
   },
   card: {
     flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 16,
     padding: 12,
-    margin:1,
+    margin: 1,
     marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
