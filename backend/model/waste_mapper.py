@@ -22,7 +22,7 @@ def map_to_waste_category(label):
         return "Recyclable - Glass", "Dispose in glass recycling bin"
     
     # Hazardous Waste (E-waste)
-    elif any(word in label for word in ['battery', 'electronics', 'lightbulb', 'mobile', 'cellphone', 'charger', 'circuit board', 'tv', 'computer', 'laptop', 'remote']):
+    elif any(word in label for word in ['battery','hard disk', 'hard disc', 'electronics', 'lightbulb', 'mobile', 'cellphone', 'charger', 'circuit board', 'tv', 'computer', 'laptop', 'remote']):
         return "Hazardous Waste", "Send to e-waste recycling center"
     
     # Recyclable - Textiles (Clothing)
