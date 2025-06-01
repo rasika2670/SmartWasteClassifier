@@ -1,5 +1,3 @@
-// wasteData.js
-
 export const wasteData = [
   {
     name: 'Biodegradable Waste',

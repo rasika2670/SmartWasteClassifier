@@ -12,6 +12,7 @@ import Camera from './src/Camera';
 import SignUp from './src/SignUp';
 import Login from './src/Login';
 import CustomHeader from './src/components/Header';
+import Detail from './src/Detail';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -96,6 +97,7 @@ function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Main" component={MyTabs} />
+        <Stack.Screen name='Detail' component={Detail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

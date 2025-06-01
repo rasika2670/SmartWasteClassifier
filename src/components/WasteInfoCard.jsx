@@ -22,11 +22,15 @@ const WasteInfoCard = ({ waste, onToggleExpand, isExpanded }) => {
           />
         </TouchableOpacity>
       </View>
-      
+
       {/* Disposal Method and Description */}
-      <Text style={styles.disposalMethod}>{waste.disposalMethod}</Text>
+      <Text style={styles.disposalMethod}>
+        {waste.disposalMethod}
+      </Text>
       {isExpanded && (
-        <Text style={styles.description}>{waste.description}</Text>
+        <Text style={styles.description}>
+          {waste.description}
+        </Text>
       )}
     </View>
   );
@@ -70,7 +74,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   description: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#555',
   },
 });

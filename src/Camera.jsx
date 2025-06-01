@@ -22,7 +22,7 @@ const requestCameraPermission = async () => {
 };
 
 // Your machine’s local IP (update accordingly for physical devices)
-const SERVER_IP = '192.168.68.249'; // Change this to your machine's local IP
+const SERVER_IP = '192.168.1.2'; // Change this to your machine's local IP
 
 // Dynamically select base URL based on platform
 const baseURL = Platform.select({

@@ -6,10 +6,12 @@ import auth from '@react-native-firebase/auth';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import WastePieChart from './components/WastePieChart';
+import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
   const [wasteData, setWasteData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const user = auth().currentUser;
@@ -46,10 +48,7 @@ const Home = () => {
       'Confirm Deletion',
       'Are you sure you want to delete this waste entry?',
       [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
+        { text: 'Cancel', style: 'cancel' },
         {
           text: 'Delete',
           style: 'destructive',
@@ -67,23 +66,24 @@ const Home = () => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => navigation.navigate('Detail', { item })}
+    >
       <Image source={{ uri: item.image }} style={styles.image} />
       <View style={styles.cardContent}>
         <Text style={styles.wasteType}>{item.wasteType}</Text>
         <Text style={styles.disposal}>{item.disposalMethod}</Text>
         <View style={styles.cardBottomRow}>
           <Text style={styles.timestamp}>
-            {item.timestamp?.toDate
-              ? moment(item.timestamp.toDate()).fromNow()
-              : 'Time not available'}
+            {item.timestamp?.toDate ? moment(item.timestamp.toDate()).fromNow() : 'Time not available'}
           </Text>
           <TouchableOpacity onPress={() => handleDelete(item.id)} style={styles.deleteBtn}>
             <Icon name="delete" size={20} color="#E63946" />
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -98,11 +98,7 @@ const Home = () => {
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
-          ListEmptyComponent={
-            <Text style={{ textAlign: 'center', marginTop: 30 }}>
-              No waste data uploaded yet.
-            </Text>
-          }
+          ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: 30 }}>No waste data uploaded yet.</Text>}
         />
       )}
     </SafeAreaView>
