@@ -22,7 +22,7 @@ A React Native mobile app that lets users snap or select photos of waste, classi
 - 💾 **Data Persistence**  
   • Saves each classification (image URL, category, timestamp, user info) to Firestore  
 
-- 📊 **Impact Dashboard** 
+- 📊 **Impact Dashboard**
   • Eco-Insights, item count, category breakdown  
 
 ---
